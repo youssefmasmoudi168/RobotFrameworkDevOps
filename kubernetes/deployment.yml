@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myserver-deployment
+  namespace: myapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myserver
+  template:
+    metadata:
+      labels:
+        app: myserver
+    spec:
+      containers:
+      - name: myserver
+        image: youssefmasmoudi/myserver:latest
+        ports:
+        - containerPort: 7272

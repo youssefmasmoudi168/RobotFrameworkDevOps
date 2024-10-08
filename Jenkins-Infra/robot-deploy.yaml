@@ -1,0 +1,31 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: myapp  # Target namespace
+  name: robot-modify-access
+rules:
+- apiGroups: ["apps"]  # For Deployments
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]  # Core API group
+  resources: ["pods", "pods/log", "pods/exec"]
+  verbs: ["create", "delete", "get", "list", "patch", "set", "update", "watch"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ops-serviceaccount-modify-robot
+  namespace: myapp  # Target namespace
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: robot-modify-access  # This refers to the Role in the spring namespace
+subjects:
+- kind: ServiceAccount
+  name: jenkins-admin  # Name of the ServiceAccount
+  namespace: ops  # Namespace of the ServiceAccount
